@@ -181,29 +181,8 @@ function toggleExaustor() {
     enviarComando(acao);
 }
 
-// Funções originais mantidas para compatibilidade
-function ligarExaustor() {
-    enviarComando("ligar");
-}
-
-function desligarExaustor() {
-    enviarComando("desligar");
-}
-
 // Inicialização
 if (DEVICE_ID) {
     verificarStatus();
-    // Atualiza o status a cada 60 segundos
-    setInterval(verificarStatus, 60000);
     setInterval(atualizarContagemRegressiva, 1000);
-}
-
-function obterTempoRestante() {
-    const stop = localStorage.getItem(`exaustor_${DEVICE_ID}_stop`);
-    if (!stop) return null;
-
-    const stopTime = new Date(stop).getTime();
-    const agora = Date.now();
-    const restante = Math.floor((stopTime - agora) / 1000);
-    return restante > 0 ? restante : 0;
 }
