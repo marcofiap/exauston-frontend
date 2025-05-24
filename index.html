@@ -14,7 +14,7 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #525358 0%, #3f559f 100%);
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -23,7 +23,7 @@
     }
 
     .control-panel {
-      background: rgba(255, 255, 255, 0.15);
+      background: #021c76;
       backdrop-filter: blur(20px);
       border-radius: 25px;
       padding: 40px;
@@ -245,7 +245,7 @@
 </head>
 <body>
 <div class="control-panel">
-  <img src="exauston.png" alt="Logo ExaustON" class="logo" />
+  <img src="exaustonbr.png" alt="Logo ExaustON" class="logo" />
   <h1 class="title">Controle do Exaustor</h1>
 
   <div class="fan-icon" id="fanIcon">🌀</div>
@@ -344,7 +344,7 @@
 
       if (data.success) {
         const newStatus = acao === 'ligar';
-        statusElement.innerText = `Status: ${newStatus ? 'Ligado ✅' : 'Desligado 🛑'}`;
+        statusElement.innerText = `Status: ${newStatus ? 'Ligado' : 'Desligado'}`;
         updateUI(newStatus);
 
         // Atualiza o status após 2 segundos para confirmar
