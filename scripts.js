@@ -84,9 +84,13 @@ async function enviarComando(acao) {
         const data = await response.json();
 
         if (data.success) {
-            if (acao === 'ligar') {
-                localStorage.setItem(`exaustor_${DEVICE_ID}_start`, data.start);
-                localStorage.setItem(`exaustor_${DEVICE_ID}_stop`, data.stop);
+            if (acao === 'ligar' && data.start && data.stop) {
+                try {
+                    localStorage.setItem(`exaustor_${DEVICE_ID}_start`, data.start);
+                    localStorage.setItem(`exaustor_${DEVICE_ID}_stop`, data.stop);
+                } catch(e) {
+                    console.warn("localStorage indisponível:", e);
+                }
             } else if (acao === 'desligar') {
                 localStorage.removeItem(`exaustor_${DEVICE_ID}_start`);
                 localStorage.removeItem(`exaustor_${DEVICE_ID}_stop`);
@@ -144,35 +148,61 @@ async function verificarStatus() {
 }
 
 function atualizarContagemRegressiva() {
-    const stop = localStorage.getItem(`exaustor_${DEVICE_ID}_stop`);
-    const start = localStorage.getItem(`exaustor_${DEVICE_ID}_start`);
     const container = document.getElementById("tempoRestanteContainer");
-    const texto = document.getElementById("tempoRestanteTexto");
-    const barra = document.getElementById("tempoBarraPreenchida");
+    const texto     = document.getElementById("tempoRestanteTexto");
+    const barra     = document.getElementById("tempoBarraPreenchida");
+    if (!container || !texto || !barra) {
+        // Se algum elemento não existir, aborta
+        return;
+    }
 
+    let stop, start;
+    try {
+        stop  = localStorage.getItem(`exaustor_${DEVICE_ID}_stop`);
+        start = localStorage.getItem(`exaustor_${DEVICE_ID}_start`);
+    } catch (err) {
+        console.warn("localStorage indisponível:", err);
+        container.style.display = "none";
+        return;
+    }
+
+    // Se não tiver timestamps, esconde o painel
     if (!stop || !start) {
         container.style.display = "none";
         return;
     }
 
-    const stopTime = new Date(stop).getTime();
+    // Converte de string ISO para milissegundos
+    const stopTime  = new Date(stop).getTime();
     const startTime = new Date(start).getTime();
-    const total = Math.floor((stopTime - startTime) / 1000);
-    const agora = Date.now();
-    const restante = Math.floor((stopTime - agora) / 1000);
-
-    if (restante > 0) {
-        container.style.display = "block";
-        texto.innerText = `Desliga em ${restante} segundos`;
-        const porcentagem = ((total - restante) / total) * 100;
-        barra.style.width = `${porcentagem}%`;
-    } else {
-        container.style.display = "none";
+    if (isNaN(stopTime) || isNaN(startTime)) {
+        // Se parsing falhar, limpa e sai
         localStorage.removeItem(`exaustor_${DEVICE_ID}_start`);
         localStorage.removeItem(`exaustor_${DEVICE_ID}_stop`);
-        verificarStatus(); // Chama para atualizar o estado real do exaustor no backend
+        container.style.display = "none";
+        return;
+    }
+
+    const total    = Math.floor((stopTime - startTime) / 1000);     // duração total em segundos
+    const agora    = Date.now();
+    const restante = Math.ceil((stopTime - agora) / 1000);         // segundos restantes
+
+    if (restante > 0) {
+        // Mostra o container e atualiza texto e barra
+        container.style.display = "block";
+        texto.innerText        = `Desliga em ${restante} segundo${restante !== 1 ? "s" : ""}`;
+        const percenteo        = ((total - restante) / total) * 100;
+        barra.style.width      = `${percenteo}%`;
+    } else {
+        // Tempo esgotou: limpa localStorage, oculta e força nova verificação
+        localStorage.removeItem(`exaustor_${DEVICE_ID}_start`);
+        localStorage.removeItem(`exaustor_${DEVICE_ID}_stop`);
+        container.style.display = "none";
+        // Reconfirma status real junto ao backend
+        verificarStatus();
     }
 }
+
 
 function toggleExaustor() {
     if (isLoading || currentStatus === null) return;
