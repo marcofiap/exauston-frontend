@@ -65,7 +65,7 @@ body {
 
 .title {
     color: white;
-    font-size: 28px;
+    font-size: 20px;
     font-weight: 300;
     margin-bottom: 30px;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
@@ -77,11 +77,11 @@ body {
     justify-content: center;
     gap: 15px;
     margin-bottom: 30px;
-    padding: 20px 25px;
+    padding: 10px 25px;
     background: rgba(255, 255, 255);
     border-radius: 15px;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    min-height: 70px;
+    min-height: 40px;
 }
 
 .status-light {
@@ -151,10 +151,10 @@ body {
 
 .control-button {
     width: 220px;
-    height: 65px;
+    height: 45px;
     border: none;
     border-radius: 15px;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
