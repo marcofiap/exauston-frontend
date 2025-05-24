@@ -1,0 +1,36 @@
+<!-- index.html: Frontend simples -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel do Exaustor</title>
+  <style>
+    body { text-align: center; font-family: sans-serif; margin-top: 80px; }
+    button { padding: 15px 30px; font-size: 18px; margin: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Controle do Exaustor</h1>
+  <button onclick="ligarExaustor()">🔛 Ligar Exaustor</button>
+  <button onclick="desligarExaustor()">🔴 Desligar Exaustor</button>
+  <p id="status"></p>
+
+  <script>
+    const API_URL = 'https://SEU_API_GATEWAY_URL'; // substitua pelo endpoint do seu API Gateway
+    const DEVICE_ID = 'SEU_DEVICE_ID'; // opcional: se precisar passar por query param
+
+    async function ligarExaustor() {
+      const res = await fetch(`${API_URL}/ligar?device_id=${DEVICE_ID}`, { method: 'POST' });
+      const data = await res.json();
+      document.getElementById('status').innerText = data.message || 'Ligado!';
+    }
+
+    async function desligarExaustor() {
+      const res = await fetch(`${API_URL}/desligar?device_id=${DEVICE_ID}`, { method: 'POST' });
+      const data = await res.json();
+      document.getElementById('status').innerText = data.message || 'Desligado!';
+    }
+  </script>
+</body>
+</html>
