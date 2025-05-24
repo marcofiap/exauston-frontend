@@ -49,43 +49,64 @@
   </style>
 </head>
 <body>
-  <img src="exauston.png" alt="Logo ExaustON" class="logo" />
-  <h1>Controle do Exaustor</h1>
-  <button class="ligar" onclick="ligarExaustor()">🔛 Ligar Exaustor</button>
-  <button class="desligar" onclick="desligarExaustor()">🔴 Desligar Exaustor</button>
+<img src="exauston.png" alt="Logo ExaustON" class="logo" />
+<h1>Controle do Exaustor</h1>
+<button class="ligar" onclick="ligarExaustor()">🔛 Ligar Exaustor</button>
+<button class="desligar" onclick="desligarExaustor()">🔴 Desligar Exaustor</button>
 
-  <div class="status" id="status">Status: --</div>
+<div class="status" id="status">Status: --</div>
 
-  <script>
-    const API_URL = "https://03s86fgxo1.execute-api.us-east-2.amazonaws.com/exaustor";
-    const DEVICE_ID = "eb74faac647ac277e8lm0x"; // seu device_id real
+<script>
+  const API_URL = "https://03s86fgxo1.execute-api.us-east-2.amazonaws.com/exaustor";
+  const DEVICE_ID = "eb74faac647ac277e8lm0x"; // seu device_id real
 
-    async function enviarComando(acao) {
-      const payload = JSON.stringify({
-        device_id: DEVICE_ID,
-        action: acao
-      });
+  async function enviarComando(acao) {
+    const payload = JSON.stringify({
+      device_id: DEVICE_ID,
+      action: acao
+    });
 
-      const response = await fetch(`${API_URL}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: payload
-      });
+    const response = await fetch(`${API_URL}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: payload
+    });
 
+    const data = await response.json();
+    document.getElementById("status").innerText = data.success
+            ? `Status: ${acao === 'ligar' ? 'Ligado ✅' : acao === 'desligar' ? 'Desligado 🛑' : 'Status: --'}`
+            : `Erro: ${data.msg}`;
+  }
+
+  async function verificarStatus() {
+    try {
+      const response = await fetch(`${API_URL}/status?device_id=${DEVICE_ID}`);
       const data = await response.json();
-      document.getElementById("status").innerText = data.success
-              ? `Status: ${acao === 'ligar' ? 'Ligado ✅' : acao === 'desligar' ? 'Desligado 🛑' : 'Status: --'}`
-              : `Erro: ${data.msg}`;
+      if (data.success) {
+        const ligado = data.status.switch_1;
+        document.getElementById("status").innerText = `Status: ${ligado ? 'Ligado ✅' : 'Desligado 🛑'}`;
+      } else {
+        document.getElementById("status").innerText = `Erro ao verificar status`;
+      }
+    } catch (error) {
+      console.error("Erro ao verificar status:", error);
+      document.getElementById("status").innerText = `Erro na comunicação`;
     }
+  }
 
-    function ligarExaustor() {
-      enviarComando("ligar");
-    }
+  function ligarExaustor() {
+    enviarComando("ligar");
+  }
 
-    function desligarExaustor() {
-      enviarComando("desligar");
-    }
-  </script>
+  function desligarExaustor() {
+    enviarComando("desligar");
+  }
 
+  // Verificar status a cada 1 segundo
+  setInterval(verificarStatus, 1000);
+
+  // Atualizar status assim que abrir a página
+  verificarStatus();
+</script>
 </body>
 </html>
