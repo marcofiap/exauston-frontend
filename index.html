@@ -80,7 +80,7 @@
 
   async function verificarStatus() {
     try {
-      const response = await fetch(`${API_URL}/status?device_id=${DEVICE_ID}`);
+      const response = enviarComando("status");
       const data = await response.json();
       if (data.success) {
         const ligado = data.status.switch_1;
