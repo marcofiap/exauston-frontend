@@ -1,35 +1,83 @@
-<!-- index.html: Frontend simples -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel do Exaustor</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="favicon.png" type="image/png">
+  <title>ExaustON</title>
   <style>
-    body { text-align: center; font-family: sans-serif; margin-top: 80px; }
-    button { padding: 15px 30px; font-size: 18px; margin: 20px; }
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 50px;
+      background-color: #f0f4f8;
+    }
+    .logo {
+      width: 200px;
+      margin-bottom: 30px;
+    }
+    button {
+      font-size: 18px;
+      padding: 12px 24px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    .ligar {
+      background-color: #22c55e;
+      color: white;
+    }
+    .ligar:hover {
+      background-color: #16a34a;
+    }
+    .desligar {
+      background-color: #ef4444;
+      color: white;
+    }
+    .desligar:hover {
+      background-color: #dc2626;
+    }
+    .status {
+      margin-top: 30px;
+      font-size: 20px;
+    }
   </style>
 </head>
 <body>
+  <img src="exauston.png" alt="Logo ExaustON" class="logo" />
   <h1>Controle do Exaustor</h1>
-  <button onclick="ligarExaustor()">🔛 Ligar Exaustor</button>
-  <button onclick="desligarExaustor()">🔴 Desligar Exaustor</button>
-  <p id="status"></p>
+  <button class="ligar" onclick="ligarExaustor()">🔛 Ligar Exaustor</button>
+  <button class="desligar" onclick="desligarExaustor()">🔴 Desligar Exaustor</button>
+
+  <div class="status" id="status">Status: --</div>
 
   <script>
-    const API_URL = 'https://SEU_API_GATEWAY_URL'; // substitua pelo endpoint do seu API Gateway
-    const DEVICE_ID = 'SEU_DEVICE_ID'; // opcional: se precisar passar por query param
+    const API_URL = "https://sua-api-gateway-ou-lambda-endpoint.amazonaws.com/dev/exaustor";
+    const DEVICE_ID = "SEU_DEVICE_ID_AQUI";
 
     async function ligarExaustor() {
-      const res = await fetch(`${API_URL}/ligar?device_id=${DEVICE_ID}`, { method: 'POST' });
-      const data = await res.json();
-      document.getElementById('status').innerText = data.message || 'Ligado!';
+      const response = await fetch(`${API_URL}/ligar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ device_id: DEVICE_ID })
+      });
+      const data = await response.json();
+      document.getElementById("status").innerText = data.success ? "Status: Ligado ✅" : `Erro: ${data.msg}`;
     }
 
     async function desligarExaustor() {
-      const res = await fetch(`${API_URL}/desligar?device_id=${DEVICE_ID}`, { method: 'POST' });
-      const data = await res.json();
-      document.getElementById('status').innerText = data.message || 'Desligado!';
+      const response = await fetch(`${API_URL}/desligar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ device_id: DEVICE_ID })
+      });
+      const data = await response.json();
+      document.getElementById("status").innerText = data.success ? "Status: Desligado 🛑" : `Erro: ${data.msg}`;
     }
   </script>
 </body>
