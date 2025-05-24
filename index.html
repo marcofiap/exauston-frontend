@@ -57,21 +57,19 @@
   <div class="status" id="status">Status: --</div>
 
   <script>
-    const API_URL = "https://03s86fgxo1.execute-api.us-east-2.amazonaws.com/exauston";
+    const API_URL = "https://03s86fgxo1.execute-api.us-east-2.amazonaws.com/exaustor";
     const DEVICE_ID = "eb74faac647ac277e8lm0x"; // seu device_id real
 
     async function enviarComando(acao) {
-      const payload = {
-        body: JSON.stringify({
-          device_id: DEVICE_ID,
-          action: acao
-        })
-      };
+      const payload = JSON.stringify({
+        device_id: DEVICE_ID,
+        action: acao
+      });
 
       const response = await fetch(`${API_URL}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: payload
       });
 
       const data = await response.json();
