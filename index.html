@@ -57,28 +57,37 @@
   <div class="status" id="status">Status: --</div>
 
   <script>
-    const API_URL = "https://sua-api-gateway-ou-lambda-endpoint.amazonaws.com/dev/exaustor";
-    const DEVICE_ID = "SEU_DEVICE_ID_AQUI";
+    const API_URL = "https://03s86fgxo1.execute-api.us-east-2.amazonaws.com";
+    const DEVICE_ID = "eb74faac647ac277e8lm0x"; // seu device_id real
 
-    async function ligarExaustor() {
-      const response = await fetch(`${API_URL}/ligar`, {
+    async function enviarComando(acao) {
+      const payload = {
+        body: JSON.stringify({
+          device_id: DEVICE_ID,
+          action: acao
+        })
+      };
+
+      const response = await fetch(`${API_URL}/${acao}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ device_id: DEVICE_ID })
+        body: JSON.stringify(payload)
       });
+
       const data = await response.json();
-      document.getElementById("status").innerText = data.success ? "Status: Ligado ✅" : `Erro: ${data.msg}`;
+      document.getElementById("status").innerText = data.success
+              ? `Status: ${acao === 'ligar' ? 'Ligado ✅' : acao === 'desligar' ? 'Desligado 🛑' : 'Status: --'}`
+              : `Erro: ${data.msg}`;
     }
 
-    async function desligarExaustor() {
-      const response = await fetch(`${API_URL}/desligar`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ device_id: DEVICE_ID })
-      });
-      const data = await response.json();
-      document.getElementById("status").innerText = data.success ? "Status: Desligado 🛑" : `Erro: ${data.msg}`;
+    function ligarExaustor() {
+      enviarComando("ligar");
+    }
+
+    function desligarExaustor() {
+      enviarComando("desligar");
     }
   </script>
+
 </body>
 </html>
