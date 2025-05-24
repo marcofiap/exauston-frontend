@@ -4,255 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="stylesheet" href="styles.css">
   <title>ExaustON</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #525358 0%, #3f559f 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .control-panel {
-      background: #021c76;
-      backdrop-filter: blur(20px);
-      border-radius: 25px;
-      padding: 40px;
-      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      text-align: center;
-      min-width: 400px;
-      transition: all 0.3s ease;
-    }
-
-    .control-panel:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 35px 55px rgba(0, 0, 0, 0.3);
-    }
-
-    .logo {
-      width: 150px;
-      margin-bottom: 20px;
-      filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.3));
-      transition: transform 0.3s ease;
-    }
-
-    .logo:hover {
-      transform: scale(1.05);
-    }
-
-    .title {
-      color: white;
-      font-size: 28px;
-      font-weight: 300;
-      margin-bottom: 30px;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .status-display {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 30px;
-      padding: 20px 25px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 15px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      min-height: 70px;
-    }
-
-    .status-light {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    }
-
-    .status-light.loading {
-      background: #fbbf24;
-      box-shadow: 0 0 20px #fbbf24;
-      animation: pulse 1.5s infinite;
-    }
-
-    .status-light.on {
-      background: #4ade80;
-      box-shadow: 0 0 20px #4ade80;
-      animation: pulse 2s infinite;
-    }
-
-    .status-light.off {
-      background: #ef4444;
-      box-shadow: 0 0 20px #ef4444;
-    }
-
-    .status-light.error {
-      background: #f97316;
-      box-shadow: 0 0 20px #f97316;
-      animation: pulse 1s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.7; transform: scale(1.1); }
-    }
-
-    .status-text {
-      color: white;
-      font-size: 18px;
-      font-weight: 500;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-      flex: 1;
-    }
-
-    .control-button {
-      width: 220px;
-      height: 65px;
-      border: none;
-      border-radius: 30px;
-      font-size: 18px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      margin-bottom: 20px;
-    }
-
-    .control-button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
-    .control-button:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-      transition: left 0.5s;
-    }
-
-    .control-button:hover:not(:disabled):before {
-      left: 100%;
-    }
-
-    .control-button.ligar {
-      background: linear-gradient(135deg, #4ade80, #22c55e);
-      color: white;
-    }
-
-    .control-button.ligar:hover:not(:disabled) {
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      transform: translateY(-3px);
-      box-shadow: 0 15px 40px rgba(74, 222, 128, 0.4);
-    }
-
-    .control-button.desligar {
-      background: linear-gradient(135deg, #ef4444, #dc2626);
-      color: white;
-    }
-
-    .control-button.desligar:hover:not(:disabled) {
-      background: linear-gradient(135deg, #dc2626, #b91c1c);
-      transform: translateY(-3px);
-      box-shadow: 0 15px 40px rgba(239, 68, 68, 0.4);
-    }
-
-    .control-button:active:not(:disabled) {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .loading-spinner {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: white;
-      animation: spin 1s linear infinite;
-      margin-right: 8px;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .fan-icon {
-      font-size: 50px;
-      margin-bottom: 15px;
-      transition: all 0.3s ease;
-      display: block;
-    }
-
-    .fan-icon.spinning {
-      animation: rotate 1s linear infinite;
-    }
-
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .device-info {
-      background: rgba(255, 255, 255, 0.08);
-      padding: 10px 15px;
-      border-radius: 10px;
-      margin-top: 20px;
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    @media (max-width: 480px) {
-      .control-panel {
-        padding: 30px 20px;
-        min-width: 350px;
-      }
-
-      .title {
-        font-size: 24px;
-      }
-
-      .control-button {
-        width: 200px;
-        height: 60px;
-        font-size: 16px;
-      }
-
-      .logo {
-        width: 120px;
-      }
-    }
-  </style>
 </head>
 <body>
 <div class="control-panel">
-  <img src="exaustonbr.png" alt="Logo ExaustON" class="logo" />
+  <div class="logo-container">
+    <img src="exaustonbr.png" alt="Logo ExaustON" class="logo" />
+  </div>
   <h1 class="title">Controle do Exaustor</h1>
-
-  <div class="fan-icon" id="fanIcon">🌀</div>
 
   <div class="status-display">
     <div class="status-light loading" id="statusLight"></div>
     <span class="status-text" id="status">Verificando status...</span>
+    <div class="fan-icon" id="fanIcon" style="display: none;">🌀</div>
   </div>
 
   <button class="control-button ligar" id="controlButton" onclick="toggleExaustor()" disabled>
@@ -292,7 +57,7 @@
   function updateUI(status, isError = false) {
     if (isError) {
       statusLight.className = "status-light error";
-      fanIcon.className = "fan-icon";
+      fanIcon.style.display = "none";
       controlButton.disabled = true;
       buttonText.innerHTML = "❌ Erro de Conexão";
       controlButton.className = "control-button desligar";
@@ -305,12 +70,14 @@
     if (status) {
       // Exaustor ligado
       statusLight.className = "status-light on";
+      fanIcon.style.display = "inline-block";
       fanIcon.className = "fan-icon spinning";
       controlButton.className = "control-button desligar";
       buttonText.innerHTML = "🔴 Desligar Exaustor";
     } else {
       // Exaustor desligado
       statusLight.className = "status-light off";
+      fanIcon.style.display = "none";
       fanIcon.className = "fan-icon";
       controlButton.className = "control-button ligar";
       buttonText.innerHTML = "🔛 Ligar Exaustor";
@@ -324,6 +91,7 @@
     if (loading) {
       statusLight.className = "status-light loading";
       buttonText.innerHTML = '<span class="loading-spinner"></span>Processando...';
+      fanIcon.style.display = "none";
     }
   }
 
@@ -377,7 +145,7 @@
 
       if (data.success && data.status) {
         const ligado = data.status.switch_1;
-        statusElement.innerText = `Status: ${ligado ? 'Ligado ✅' : 'Desligado 🛑'}`;
+        statusElement.innerText = `Status: ${ligado ? 'Ligado' : 'Desligado'}`;
         updateUI(ligado);
       } else {
         let mensagem = data.msg || "Erro ao verificar status";
