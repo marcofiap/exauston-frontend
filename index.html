@@ -57,7 +57,7 @@
   <div class="status" id="status">Status: --</div>
 
   <script>
-    const API_URL = "https://03s86fgxo1.execute-api.us-east-2.amazonaws.com/exauston-backend";
+    const API_URL = "https://03s86fgxo1.execute-api.us-east-2.amazonaws.com/exauston";
     const DEVICE_ID = "eb74faac647ac277e8lm0x"; // seu device_id real
 
     async function enviarComando(acao) {
@@ -68,7 +68,7 @@
         })
       };
 
-      const response = await fetch(`${API_URL}/${acao}`, {
+      const response = await fetch(`${API_URL}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
