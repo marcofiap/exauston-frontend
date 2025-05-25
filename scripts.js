@@ -1,4 +1,4 @@
-const API_URL = "https://9cpa6zswu3.execute-api.us-east-2.amazonaws.com/exaustor";
+const API_URL = "https://wsdggml17l.execute-api.us-east-2.amazonaws.com/exaustor";
 
 // Pega o device_id da URL (exemplo: ?device_id=abc123)
 const urlParams = new URLSearchParams(window.location.search);
