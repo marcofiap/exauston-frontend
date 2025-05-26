@@ -8,31 +8,31 @@
   <title>ExaustON</title>
 </head>
 <body>
-  <div class="control-panel">
-    <div class="logo-container">
-      <img src="exaustonbr.png" alt="Logo ExaustON" class="logo" />
-    </div>
-    <h1 class="title">Controle do Exaustor</h1>
-
-    <div class="status-display">
-      <div class="status-light loading" id="statusLight"></div>
-      <span class="status-text" id="status">Verificando status...</span>
-      <div class="fan-icon" id="fanIcon" style="display: none;">🌀</div>
-    </div>
-
-    <button class="control-button ligar" id="controlButton" onclick="toggleExaustor()" disabled>
-      <span id="buttonText">🔄 Carregando...</span>
-    </button>
-
-    <div class="tempo-restante-container" id="tempoRestanteContainer" style="display: none;">
-      <div id="tempoRestanteTexto" class="tempo-restante-texto"></div>
-      <div class="tempo-barra">
-        <div class="tempo-barra-preenchida" id="tempoBarraPreenchida"></div>
-      </div>
-    </div>
-
-    <div class="device-info" id="deviceInfo"></div>
+<div class="control-panel">
+  <div class="logo-container">
+    <img src="exaustonbr.png" alt="Logo ExaustON" class="logo" />
   </div>
-  <script src="scripts.js" defer></script>
+  <h1 class="title">Controle do Exaustor</h1>
+
+  <div class="status-display">
+    <div class="status-light loading" id="statusLight"></div>
+    <span class="status-text" id="status">Verificando status...</span>
+    <div class="fan-icon" id="fanIcon" style="display: none;">🌀</div>
+  </div>
+  <button class="control-button ligar" id="controlButton" onclick="toggleExaustor()" disabled>
+    <span id="buttonText">🔄 Carregando...</span>
+  </button>
+  <div class="tempo-restante-container" id="tempoRestanteContainer" style="display: none;">
+    <div id="tempoRestanteTexto" class="tempo-restante-texto"></div>
+    <div class="tempo-barra">
+      <div class="tempo-barra-preenchida" id="tempoBarraPreenchida"></div>
+    </div>
+  </div>
+  <div class="device-info" id="deviceInfo"></div>
+  <button id="refreshButton" class="refresh-link" onclick="verificarStatus()">
+    Atualizar Status
+  </button>
+</div>
+<script src="scripts.js" defer></script>
 </body>
 </html>

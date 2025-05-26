@@ -287,8 +287,30 @@ body {
 
 .tempo-barra-preenchida {
     height: 100%;
-    width: 0%;
+    width: 0;
     background: #f59e0b; /* laranja sutil */
     transition: width 1s linear;
 }
+
+/* styles.css */
+/* Estilo “sem ênfase” para o botão de atualizar */
+.refresh-link {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 8px;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+.refresh-link:hover {
+    color: rgba(255, 255, 255, 1);
+}
+.refresh-link:disabled {
+    color: rgba(255, 255, 255, 0.4);
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
 

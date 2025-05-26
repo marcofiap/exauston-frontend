@@ -151,58 +151,49 @@ function atualizarContagemRegressiva() {
     const container = document.getElementById("tempoRestanteContainer");
     const texto     = document.getElementById("tempoRestanteTexto");
     const barra     = document.getElementById("tempoBarraPreenchida");
-    if (!container || !texto || !barra) {
-        // Se algum elemento não existir, aborta
-        return;
-    }
+    if (!container || !texto || !barra) return;
 
     let stop, start;
     try {
         stop  = localStorage.getItem(`exaustor_${DEVICE_ID}_stop`);
         start = localStorage.getItem(`exaustor_${DEVICE_ID}_start`);
-    } catch (err) {
-        console.warn("localStorage indisponível:", err);
+    } catch {
         container.style.display = "none";
         return;
     }
 
-    // Se não tiver timestamps, esconde o painel
     if (!stop || !start) {
         container.style.display = "none";
         return;
     }
 
-    // Converte de string ISO para milissegundos
     const stopTime  = new Date(stop).getTime();
     const startTime = new Date(start).getTime();
     if (isNaN(stopTime) || isNaN(startTime)) {
-        // Se parsing falhar, limpa e sai
         localStorage.removeItem(`exaustor_${DEVICE_ID}_start`);
         localStorage.removeItem(`exaustor_${DEVICE_ID}_stop`);
         container.style.display = "none";
         return;
     }
 
-    const total    = Math.floor((stopTime - startTime) / 1000);     // duração total em segundos
-    const agora    = Date.now();
-    const restante = Math.ceil((stopTime - agora) / 1000);         // segundos restantes
+    const totalSec    = Math.floor((stopTime - startTime) / 1000);
+    const agora       = Date.now();
+    const restanteSec = Math.ceil((stopTime - agora) / 1000);
 
-    if (restante > 0) {
-        // Mostra o container e atualiza texto e barra
+    if (restanteSec > 0) {
         container.style.display = "block";
-        texto.innerText        = `Desliga em ${restante} segundo${restante !== 1 ? "s" : ""}`;
-        const percenteo        = ((total - restante) / total) * 100;
-        barra.style.width      = `${percenteo}%`;
+        texto.innerText   = `Desliga em ${formatTime(restanteSec)}`;
+        const percent     = ((totalSec - restanteSec) / totalSec) * 100;
+        barra.style.width = `${percent}%`;
     } else {
-        // Tempo esgotou: limpa localStorage, oculta e força nova verificação
         localStorage.removeItem(`exaustor_${DEVICE_ID}_start`);
         localStorage.removeItem(`exaustor_${DEVICE_ID}_stop`);
         container.style.display = "none";
-        // Reconfirma status real junto ao backend
         verificarStatus();
     }
 }
 
+setInterval(atualizarContagemRegressiva, 1000);
 
 function toggleExaustor() {
     if (isLoading || currentStatus === null) return;
@@ -211,8 +202,14 @@ function toggleExaustor() {
     enviarComando(acao);
 }
 
-// Inicialização
 if (DEVICE_ID) {
     verificarStatus();
-    setInterval(atualizarContagemRegressiva, 1000);
+}
+
+function formatTime(totalSeconds) {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    const mm = String(minutes).padStart(2, '0');
+    const ss = String(seconds).padStart(2, '0');
+    return `${mm}:${ss}`;
 }
